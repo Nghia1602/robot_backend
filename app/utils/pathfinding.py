@@ -3,14 +3,23 @@ import heapq
 def heuristic(a,b):
     return abs(a[0]-b[0]) + abs(a[1]-b[1])
 
-def get_neighbors (node, grid):
-    directions = [(0,1),(1,0),(0,-1), (-1,0)]
-    neighbors=[]
+def get_neighbors(node, grid):
+    directions = [(0,1),(1,0),(0,-1),(-1,0)]
+    neighbors = []
+
+    rows = len(grid)
+    cols = len(grid[0]) if rows > 0 else 0
+
     for dx, dy in directions:
         nx = node[0] + dx
-        ny = node[1] + dy  
-        if (nx, ny) in grid and grid[nx, ny]==1:
-            neighbors.append((nx, ny))
+        ny = node[1] + dy
+
+        # check nằm trong grid
+        if 0 <= nx < rows and 0 <= ny < cols:
+            # chỉ đi vào ô = 0 (đường đi)
+            if grid[nx][ny] == 0:
+                neighbors.append((nx, ny))
+
     return neighbors
 def astar (grid, start,goal):
     open_set = []
