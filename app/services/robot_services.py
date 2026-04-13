@@ -18,6 +18,12 @@ class RobotService:
             if x is None or y is None or robot_id is None:
                 raise ValueError("x, y, and robot_id must be provided")
             cls._robot[robot_id] = {"x": x, "y": y, "status": "idle"}
+    @classmethod
+    def get_robot(cls,robot_id: int):
+        with cls._lock:
+            if robot_id not in cls._robot:
+                raise ValueError(f"Robot with id {robot_id} does not exist")
+            return cls._robot[robot_id]
 
     @classmethod
     def get_all_robot(cls):
