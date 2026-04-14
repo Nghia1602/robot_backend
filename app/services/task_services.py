@@ -13,6 +13,6 @@ class TaskService:
     def get_tasks(cls):
         with cls._lock:
             if cls._tasks:
-                return list(cls._tasks.popleft())
+                return cls._tasks.popleft()
             return None
         

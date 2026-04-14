@@ -31,9 +31,17 @@ class RobotService:
             return list(cls._robot.values())
 
     @classmethod
-    def update_robot(cls, robot_id: int, x: int, y: int, status: str):
+    def update_robot_position(cls, robot_id: int, x: int, y: int):
         if not isinstance(x, int) or not isinstance(y, int):
             raise ValueError("x and y must be integers")
+        
+        with cls._lock:
+            if robot_id not in cls._robot:
+                raise ValueError(f"Robot with id {robot_id} does not exist")
+
+            cls._robot[robot_id].update({"x": x, "y": y})
+    @classmethod
+    def update_robot_status(cls, robot_id:int, status:str):
         if status not in cls.VALUE_STATUS:
             raise ValueError(
                 f"Invalid status: {status}. Valid statuses are: {cls.VALUE_STATUS}"
@@ -41,8 +49,7 @@ class RobotService:
         with cls._lock:
             if robot_id not in cls._robot:
                 raise ValueError(f"Robot with id {robot_id} does not exist")
-
-            cls._robot[robot_id].update({"x": x, "y": y, "status": status})
+            cls._robot[robot_id].update({"status": status})
     @classmethod
     def delete_robot(cls, robot_id:int):
         with cls._lock:
